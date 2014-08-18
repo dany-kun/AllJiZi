@@ -21,8 +21,9 @@ mylanguages.init(function(err, mlanguages) {
     
     appExpress.use(bodyParser());
     appExpress.use(express.static(path.resolve(__dirname, 'static')));
+    
     appExpress.use(function(req,res,next){
-       console.log(res.url) ;
+       console.log(req) ;
        next();
     });
     
