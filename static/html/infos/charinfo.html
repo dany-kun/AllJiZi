@@ -1,0 +1,16 @@
+<aside>
+
+    <input id='hideinfobtn' type="button" value="Show Info" ng-click="toggleInfo()" />
+
+    <div class='infomodule' ng-hide="isHidden">
+        <h3>Info</h3>
+        <p>
+            <ul>Prononciation:
+                <span ng-bind="charactersData.pron"></span>
+            </ul>
+            <!--<ul>Frequency:
+            <span ng-bind="charactersData._id"></span>
+        </ul> -->
+        </p>
+    </div>
+</aside>
