@@ -80,7 +80,7 @@ mylanguages.init(function(err, mlanguages) {
                 }
             
                 //Open database
-                dbquery.initReadOnly("static/db/characters.db");
+                dbquery.initReadOnly("assets/db/characters.db");
                 // Query all the corresponding characters in all tables 
                 dbquery.getNewSet(language, params.id, function(data) {
                     //Emit result to client
@@ -94,7 +94,7 @@ mylanguages.init(function(err, mlanguages) {
         socket.on('search for char', function(char) {
             console.log('looking for ' + char + ' in the database');
             //Get instance of db
-            dbquery.initReadOnly("static/db/characters.db");
+            dbquery.initReadOnly("assets/db/characters.db");
             dbquery.searchChar(searchquery.searchquery, '%' + char + '%', function(err, rows) {
                 if (err) {
                     console.log(err);
