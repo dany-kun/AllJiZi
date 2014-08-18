@@ -5,64 +5,46 @@ var session = require("express-session");
 var path = require('path');
 var io = require('socket.io');
 
-/**Own module to initialize and load all parameters relative to a language */
+/*Own module to initialize and load all parameters relative to a language */
 var mylanguages = require("mlanguages");
-/**Own module to get the search query */
+/*Own module to get the search query */
 var searchquery=require("search-query");
-
+/* Own module which communicate with the database */
 var dbquery=require("dbquery");
 
 var appExpress = express();
 
-//var file = "static/db/characters.db";
-
-
 
 mylanguages.init(function(err, mlanguages) {
     
+    /* Setting the server with Express module  */
+    
     appExpress.use(bodyParser());
     appExpress.use(express.static(path.resolve(__dirname, 'static')));
+    appExpress.use(function(req,res,next){
+       console.log(res.url) ;
+       next();
+    });
+    
     appExpress.use(cookieParser('S3CRE7'));
     appExpress.use(session());
 
 
     io = io.listen(appExpress.listen(process.env.PORT, process.env.IP));
 
-    appExpress.get('/', function(req, res) {
-
-        console.log(req.query);
-
-        req.session.char = false;
-
-        res.render('index.html');
-
-    });
-
-    /*appExpress.get('/chars/', function(req, res) {
-        
-        if (!!req.query){
-            console.log('ask for char through http');
-            var calling_language=req.query.calling_language;    
-            newchar(calling_language,1200,function(data){
-                    res.send(data);
-            });
-        }
-    });
-
-    //initializing the websockets communication , server instance has to be sent as the argument 
-    */
-
+    
+    /* Initialization of socket */
     io.sockets.on("connection", function(socket) {
-        /*Associating the callback function to be executed when client visits the page and
-          websocket connection is made */
 
         console.log('io socket connected');
 
 
-        //TODO: Need to optimize that!: same arguments given 3 times!
-        //Params: object with 2 properties: 'lang': calling language and 'id': row id
+         /* Emit from client asking for a new char set (one character from calling_language 
+         and corresponding characters in the other languages
+         Params: object with 2 properties: 'lang': calling language and 'id': row id */
         socket.on('getNewChar', function(params) {
             
+            //Check if params has the correct properties
             if (!params || !params.lang){
                 console.log('Missing the lang properties in the querying object');
             }
@@ -80,7 +62,7 @@ mylanguages.init(function(err, mlanguages) {
                 }
             
                 //Open database
-                dbquery.initReadOnly("static/db/characters.db");
+                dbquery.initReadOnly("assets/db/characters.db");
                 // Query all the corresponding characters in all tables 
                 dbquery.getNewSet(language, params.id, function(data) {
                     //Emit result to client
@@ -90,11 +72,11 @@ mylanguages.init(function(err, mlanguages) {
         });
         
         
-        // Searching for a set of char corresponding*/
+        /*Searching for a char and returning the corresponding characters (in all languages)*/
         socket.on('search for char', function(char) {
             console.log('looking for ' + char + ' in the database');
             //Get instance of db
-            dbquery.initReadOnly("static/db/characters.db");
+            dbquery.initReadOnly("assets/db/characters.db");
             dbquery.searchChar(searchquery.searchquery, '%' + char + '%', function(err, rows) {
                 if (err) {
                     console.log(err);
