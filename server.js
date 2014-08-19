@@ -17,20 +17,32 @@ var appExpress = express();
 
 mylanguages.init(function(err, mlanguages) {
     
+    /**
+     * In case for whatever reasons we could not access database properties/queries/functionalities
+    */
+    if (err){
+        throw new Error('Could not get database properties');
+    }
+    
     /* Setting the server with Express module  */
     
-    appExpress.use(bodyParser());
+    appExpress.use(function(req,res,next){
+       console.log(req.session) ;
+       //console.log(res.url) ;
+       next();
+    });
+    
+    //appExpress.use(bodyParser());
     appExpress.use(express.static(path.resolve(__dirname, 'static')));
     
-    appExpress.use(cookieParser('S3CRE7'));
+    //appExpress.use(cookieParser('S3CRE7'));
     appExpress.use(session());
     
     appExpress.use(function(req,res,next){
-       console.log(req) ;
-       console.log(res) ;
+       console.log(req.session +'e') ;
+       //console.log(res.url) ;
        next();
     });
-
 
     io = io.listen(appExpress.listen(process.env.PORT, process.env.IP));
 
