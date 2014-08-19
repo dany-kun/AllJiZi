@@ -22,13 +22,14 @@ mylanguages.init(function(err, mlanguages) {
     appExpress.use(bodyParser());
     appExpress.use(express.static(path.resolve(__dirname, 'static')));
     
-    appExpress.use(function(req,res,next){
-       console.log(req) ;
-       next();
-    });
-    
     appExpress.use(cookieParser('S3CRE7'));
     appExpress.use(session());
+    
+    appExpress.use(function(req,res,next){
+       console.log(req) ;
+       console.log(res) ;
+       next();
+    });
 
 
     io = io.listen(appExpress.listen(process.env.PORT, process.env.IP));
