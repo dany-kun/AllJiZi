@@ -8,9 +8,9 @@ var io = require('socket.io');
 /*Own module to initialize and load all parameters relative to a language */
 var mylanguages = require("mlanguages");
 /*Own module to get the search query */
-var searchquery=require("search-query");
+var searchquery=require("msearches");
 /* Own module which communicate with the database */
-var dbquery=require("dbquery");
+var dbquery=require('mdbquery');
 
 var appExpress = express();
 
