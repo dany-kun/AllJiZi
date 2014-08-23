@@ -69,9 +69,14 @@ mylanguages.init(function(err, mlanguages) {
                 //Open database
                 dbquery.initReadOnly("assets/db/characters.db");
                 // Query all the corresponding characters in all tables 
-                dbquery.getNewSet(language, params.id, function(data) {
-                    //Emit result to client
-                    socket.emit('got new char', data);
+                dbquery.getNewSet(language, params.id, function(err,data) {
+                    if (err){
+                        console.log(err);
+                    }
+                    else{
+                        //Emit result to client
+                        socket.emit('got new char', data);
+                    }
                 });
             }
         });
