@@ -1,9 +1,9 @@
 (function() {
 
-    var app = angular.module('moduleChar', ['communicationServer','ui.bootstrap']);
+    var app = angular.module('moduleChar', ['communicationServer','ui.bootstrap','ngCookies']);
     
     /* Service for all things related to th emain char [char set displayed] */
-    app.factory('MainChar', function() {
+    app.factory('MainChar', ['$cookieStore',function($cookieStore) {
         
         var lang = {
             tw: {
@@ -71,9 +71,35 @@
                 charactersData.char = '\u2205';
                 charactersData.pron='';
             }
-        
         }
         
+        
+        /* Record in a cookie every past couple (row_id, lang) */
+        function recordLog(){
+            
+            var params={};
+            params.lang=charactersData.currentLanguage;
+            params.id=charactersData.currentChar[params.lang]._id;
+            
+            //$cookieStore.remove('pastCouples');
+            var tempPast=$cookieStore.get('pastCouples');
+            
+            //If no defined cookies, initialize storing array
+            if (!tempPast){
+                tempPast={};
+            }
+            if (!(tempPast.log)){
+                tempPast.log=[];
+            }
+            //Set a limit to 20 characters
+            if (tempPast.log.length>20){
+                tempPast.log.shift();
+            }
+            var tempsLogs=tempPast.log;
+            tempsLogs.push(params);
+            $cookieStore.put('pastCouples',{log:tempsLogs});
+            
+        }
         
         return {
             getCurrentChar: function (){
@@ -82,6 +108,7 @@
             setCurrentChar: function(newchar) {
                 setCurrentChar(newchar);
                 updateChar();
+                recordLog();
             },
             setCurrentLanguage: function(country) {
                 setCurrentLanguage(country);
@@ -90,9 +117,9 @@
             lang:lang
         
         };
-    });
+    }]);
 
-    app.controller('infoCtrl', ['$scope', 'MainChar',function($scope,MainChar) {
+    app.controller('infoCtrl', ['$scope', 'MainChar','$cookieStore',function($scope,MainChar,$cookieStore) {
         
         $scope.isHidden = false;
         
@@ -106,6 +133,7 @@
         
         $scope.toggleInfo = function() {
             $scope.isHidden = !$scope.isHidden;
+            console.log($cookieStore.get('pastChars'));
         };
 
 
@@ -116,7 +144,6 @@
 
             /*Function called when data was received by the client from the server */
             var callbackSetCurrentChar = function(data) {
-                console.log('got a new char:' + JSON.stringify(data));
                 MainChar.setCurrentChar(data);
             };
 
@@ -128,8 +155,11 @@
                     callbackSetCurrentChar(data);
                 });
             }
-
+            
+            /* params is a couple lang/id */
             function getData(params) {
+                
+                console.log(params +'++');
 
                 /* In case the request is through socket */
                 if (typeReq == 'Socket') {
@@ -276,17 +306,31 @@
         
     }]);
 
-    app.controller('charCtrl', ['$scope', 'Query','MainChar',function($scope, Query, MainChar) {
+    app.controller('charCtrl', ['$scope', 'Query', 'MainChar', '$cookieStore',
+        function($scope, Query, MainChar, $cookieStore) {
 
-        /* Get the current char from the factory MainChar */
-        $scope.charactersData = MainChar.getCurrentChar();
-        
-        $scope.getData=function(){
-            var queryParams={'lang':$scope.charactersData.currentLanguage};
-            Query.queryOneChar(queryParams);
-        };
+            /* Get the current char from the factory MainChar */
+            $scope.charactersData = MainChar.getCurrentChar();
 
-    }]);
+            $scope.getData = function() {
+                var queryParams = {
+                    lang: $scope.charactersData.currentLanguage
+                };
+                Query.queryOneChar(queryParams);
+            };
+
+            $scope.prevData = function() {
+                var mlogs=$cookieStore.get('pastCouples');
+                console.log(mlogs);
+                var logs=mlogs.log;
+                Query.queryOneChar({lang:logs[logs.length-2].lang, id:logs[logs.length-2].id});
+                logs.slice(-2,2);
+                $cookieStore.put('pastCouples', {log:logs});
+
+            };
+
+        }
+    ]);
     
     /* Controller for the flag board */
     app.controller('flagboardCtrl',['$scope','MainChar',function($scope,MainChar){
@@ -307,59 +351,40 @@
     }]);
     
     /**Directive returning the flagboard
-     * 
+     *
      */
-    
-    app.directive('flagBoard',['MainChar',function (MainChar) {
-    
-    
-        var flags = [MainChar.lang.tw, MainChar.lang.cn, MainChar.lang.jp];
-        
-        var templateHtml="<table><tr>";
-        flags.forEach(function(flag) {
-            templateHtml+=("<td><img src="+ flag.url +" name=" + flag.country +"></td>");
-        });
-        templateHtml+="</tr></table>";
-    
-        return {
-            restrict: 'E',
-            scope:{
-              ppp:'@'  
-            },
-            template:"{{ppp}}" + templateHtml,
-            link: function(scope, element, attrs) {
-                //Look for active flag attribute
-                if (attrs.active){
-                    var imgs = element.find("img");
-                    for(var i=0;i<imgs.length;i++){
-                        if(imgs[i].name == attrs.active){
-                            //Apply css on active flag
-                            angular.element(imgs[i]).addClass('selectedFlag');
+    app.directive('flagBoard', ['MainChar',
+                function(MainChar) {
+
+
+                    var flags = [MainChar.lang.tw, MainChar.lang.cn, MainChar.lang.jp];
+
+                    var templateHtml = "<table><tr>";
+                    flags.forEach(function(flag) {
+                        templateHtml += ("<td><img src=" + flag.url + " name=" + flag.country + "></td>");
+                    });
+                    templateHtml += "</tr></table>";
+
+                    return {
+                        restrict: 'E',
+                        scope: {
+                            ppp: '@'
+                        },
+                        template: "{{ppp}}" + templateHtml,
+                        link: function(scope, element, attrs) {
+                            //In case of static flags
+                            //Look for active flag attribute
+                            if (attrs.active) {
+                                var imgs = element.find("img");
+                                for (var i = 0; i < imgs.length; i++) {
+                                    if (imgs[i].name == attrs.active) {
+                                        //Apply css on active flag
+                                        angular.element(imgs[i]).addClass('selectedFlag');
+                                    }
+                                }
+                            }
                         }
-                    }
-                }
-            }
-        };
-        
-        // <table>",
-        //             "<tr>",
-        //                 "<td ng-repeat='flag in flags | orderBy: index'>",
-        //                     "<img ng-src='{{flag.url}}' ng-click=switchLanguage($index,flag) ng-class='{'selectedFlag': $index==isSelected.currentIndex }' ></img>",
-        //                 "</td>",
-        //             "</tr>",
-        //         "</table>"].join("")
-    
-    
-                /*<div class="flagboard" ng-controller="flagboardCtrl">
-                <table>
-                    <tr>
-                        <td ng-repeat="flag in flags | orderBy: 'index'">
-                            <img ng-src="{{flag.url}}" ng-click="switchLanguage($index,flag)" ng-class="{'selectedFlag': $index==isSelected.currentIndex }" ></img>
-                        </td>
-                    </tr>
-                </table>
-                
-            </div>*/
+                    };
         
     }]);
     
