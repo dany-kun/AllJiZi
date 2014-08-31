@@ -27,26 +27,31 @@
             <nav>
                 <ul>
                     <li>
-                        <a href="index.html">Link to app</a>
+                        <a href="index.html">Home</a>
                     </li>
                     <li>
                         <a href="sources.html">Sources</a>
                     </li>
-                </ul>
+    
+    
             </nav>
+    
+<!--            <div class="applink">
+    
+                <a href="https://play.google.com/store/apps/details?id=com.allforkanjis.hankanji">
+                    <img alt="Get it on Google Play" src="http://developer.android.com/images/brand/en_generic_rgb_wo_45.png" />
+    
+            </div>-->
+    
+    
         </header>
     </div>
     <div class="main-container">
         <div class="main wrapper clearfix" ng-app="moduleChar">
             <div class="flagboard" ng-controller="flagboardCtrl">
-                <table>
-                    <tr>
-                        <td ng-repeat="flag in flags | orderBy: 'index'">
-                            <img ng-src="{{flag.url}}" ng-click="switchLanguage($index,flag)" ng-class="{'selectedFlag': $index==isSelected.currentIndex }" ></img>
-                        </td>
-                    </tr>
-                </table>
-            <!-- <flag-board active='cn'></flag-board> -->
+                
+                <flag-board onflagclick='switchLanguage(param)' active='{{isSelected.currentIndex}}'></flag-board>
+                
             </div>
             
             <div class="newchar" ng-controller="charCtrl">
