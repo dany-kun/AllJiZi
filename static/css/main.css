@@ -174,12 +174,38 @@ nav a:hover {
     border:3px solid ;
 }
 
+
+input[type="submit"] {
+    cursor: pointer;
+    cursor: hand;
+    border-color: #ddd;
+    padding: 3px 6px;
+    color: #428bca;
+    background-color: #fff;
+    border: 2px solid #ddd;
+}
+
+input[type="submit"]:hover{
+    text-decoration: none;
+    background-color: #ddd;
+}
+
 .nextbutton {
+    border-bottom-right-radius: 5px;
+    border-top-right-radius: 5px;
     float:right;
     font-size:100%;
-    cursor:pointer;
-    cursor:hand;
-    
+}
+
+.prevbutton {
+    border-bottom-left-radius: 5px;
+    border-top-left-radius: 5px;
+    float:left;
+}
+
+input.basicbutton {
+    color:black;
+    border-radius:5px 5px 5px 5px;
 }
 
 

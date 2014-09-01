@@ -1,7 +1,21 @@
 (function() {
 
-    var app = angular.module('moduleChar', ['communicationServer', 'ui.bootstrap', 'ngCookies']);
+    var app = angular.module('moduleChar', ['communicationServer', 'ui.bootstrap', 'ngCookies','ngRoute','mySearchModule']);
+    
+    /* Config the view to render on link click */
+    app.config(['$routeProvider', '$locationProvider',
+        function($routeProvider, $locationProvider) {
+            $routeProvider
 
+                .when('/Sources', {
+                    templateUrl: 'sources.html'
+                });
+    
+            // configure html5 to get links working on jsfiddle
+            $locationProvider.html5Mode(true);
+        }
+    ]);
+    
     /* Service for all things related to th emain char [char set displayed] */
     app.factory('MainChar', ['$cookieStore',
         function($cookieStore) {
@@ -38,6 +52,17 @@
                     url: 'http://upload.wikimedia.org/wikipedia/commons/9/9e/Flag_of_Japan.svg'
                 }
             };
+            
+/*            if($cookieStore.get('pastCouples')) {
+                var logs = $cookieStore.get('pastCouples').log;
+                if (logs.length > 0) {
+                    Query.queryOneChar({
+                        //Need to withdraw 1 to get the last element [indexed on 0]
+                        lang: logs[logs.length - 1].lang,
+                        id: logs[logs.length - 1].id
+                    });
+                }
+            }*/
 
             var charactersData = {
                 currentChar: {
@@ -168,8 +193,6 @@
 
             /* params is a couple lang/id */
             function getData(params) {
-
-                console.log(params + '++');
 
                 /* In case the request is through socket */
                 if (typeReq == 'Socket') {
@@ -330,26 +353,36 @@
 
             /* Get the current char from the factory MainChar */
             $scope.charactersData = MainChar.getCurrentChar();
-
+            
+            //Ask for a new char 
             $scope.getData = function() {
                 var queryParams = {
                     lang: $scope.charactersData.currentLanguage
                 };
                 Query.queryOneChar(queryParams);
             };
-
+            
+            //Ask for the previous char, taking its coordinates from cookies
+            //->Would not work offline, store qll infos in cookies?
             $scope.prevData = function() {
                 var mlogs = $cookieStore.get('pastCouples');
-                console.log(mlogs);
                 var logs = mlogs.log;
-                Query.queryOneChar({
-                    lang: logs[logs.length - 2].lang,
-                    id: logs[logs.length - 2].id
-                });
-                logs.slice(-2, 2);
-                $cookieStore.put('pastCouples', {
-                    log: logs
-                });
+                if (logs.length > 1) {
+                    
+                    logs.pop();
+                
+                    Query.queryOneChar({
+                        //Need to withdraw 1 to get the last element [indexed on 0]
+                        lang: logs[logs.length - 1].lang,
+                        id: logs[logs.length - 1].id
+                    });
+                    
+                    logs.pop();
+                    $cookieStore.put('pastCouples', {
+                        log: logs
+                    });
+                
+                }
 
             };
 

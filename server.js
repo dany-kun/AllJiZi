@@ -31,7 +31,7 @@ mylanguages.init(function(err, mlanguages) {
     //appExpress.use(bodyParser());
     appExpress.use(express.static(path.resolve(__dirname, 'static')));
 
-    //appExpress.use(cookieParser('S3CRE7'));
+    appExpress.use(cookieParser('myS3CRE7'));
     appExpress.use(session());
 
 
