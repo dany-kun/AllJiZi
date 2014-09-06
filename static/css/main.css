@@ -49,6 +49,10 @@ textarea {
     resize: vertical;
 }
 
+p{
+    margin:0px;
+}
+
 .browsehappy {
     margin: 0.2em 0;
     background: #ccc;
@@ -83,6 +87,7 @@ body {
     border-top: 20px solid #3A3230;
 }
 
+
 .header-container,
 .footer-container{
     background: #262070;
@@ -112,6 +117,10 @@ nav a {
 
     color: white;
     background: #3A3230;
+}
+
+a#applink{
+    background:transparent;
 }
 
 nav a:hover,
@@ -225,19 +234,12 @@ input.basicbutton {
     font-size: 200px;
     text-align: -webkit-center;
     text-align: center;
+    line-height:1.2;
 }
 
 aside{
     text-align:center;
 }
-
-/* Clearing the top float properties */
-.newchar{
-    clear:both;
-}
-
-
-
 
 
 
@@ -355,6 +357,20 @@ aside{
     .wrapper {
         width: 1026px; /* 1140px - 10% for margins */
         margin: 0 auto;
+    }
+}
+
+@media only screen and (min-height: 500px) {
+    html,
+    body {
+        height: 100%;
+    }
+    .footer-container {
+        height: 50px;
+    }
+    .header-and-main-container {
+        min-height: 100%;
+        margin-bottom: -70px; /* include footer top border of 20px : 50px + 20px*/
     }
 }
 

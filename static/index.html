@@ -11,78 +11,47 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="css/normalize.min.css">
     <link rel="stylesheet" href="css/main.css">
-    <link rel="stylesheet" href="css/mycss.css">
     <script src="file://www.google-analytics.com/analytics.js"></script>
     
 </head>
-<body>
+<body ng-app="moduleChar">
     <!--[if lt IE 7]>
         <p class="browsehappy">You are using an
             <strong>outdated</strong>browser. Please
             <a href="http://browsehappy.com/">upgrade your browser</a>to improve your experience.</p>
     <![endif]-->
+    <div class="header-and-main-container">
+    
     <div class="header-container">
         <header class="wrapper clearfix">
             <h1 class="title">AllJiZi</h1>
             <nav>
                 <ul>
                     <li>
-                        <a href="">Home</a>
+                        <a href="/">Home</a>
                     </li>
                     <li>
-                        <a href="Sources">Sources</a>
+                        <a href="sources">Sources</a>
+                    </li>
+                    <li >
+                        <a id="applink" target="_blank" href="https://play.google.com/store/apps/details?id=com.allforkanjis.hankanji">
+                        <img alt="Get it on Google Play" src="http://developer.android.com/images/brand/en_generic_rgb_wo_45.png" />
+                        </a>
                     </li>
     
     
             </nav>
     
-<!--            <div class="applink">
-    
-                <a href="https://play.google.com/store/apps/details?id=com.allforkanjis.hankanji">
-                    <img alt="Get it on Google Play" src="http://developer.android.com/images/brand/en_generic_rgb_wo_45.png" />
-    
-            </div>-->
-    
-    
         </header>
     </div>
-    <div class="main-container">
-        <div class="main wrapper clearfix" ng-app="moduleChar">
-            <div class="top">
-                <div class="flagboard" ng-controller="flagboardCtrl">
-            
-                    <flag-board onflagclick='switchLanguage(param)' active='{{isSelected.currentIndex}}'></flag-board>
-            
-                </div>
-                <div class="searchbar ir" ng-controller="searchBarCtrl">
-                    <div my-search-bar></div>
-                </div>
-            
-            </div>
-            
-            <div ng-view></div>
-            
-            <div class="newchar" ng-controller="charCtrl">
-                <!-- If no Javascript
-                                                                <form action="/require_char" method="post">!-->
-            
-                <article id="character">
-                    <p>
-                        <span ng-bind="charactersData.char"></span>
-                    </p>
-                    <input class="nextprevbuttons prevbutton" type="submit" ng-click="prevData()" value="←Prev" />
-                    <input class="nextprevbuttons nextbutton" type="submit" ng-click="getData()" value="Next→" />
-                </article>
-            
-                <br>
-                <my-char-info ng-controller="infoCtrl" active-country="getActiveCountry()" />
-            
-            </div>
-            
-        </div>
-        <!-- #main -->
-    </div>
     <!-- #main-container -->
+    <div class="main-container">
+    <div class="main wrapper" ng-view></div>
+    
+    </div>
+    </div>
+        
+    
     <div class="footer-container">
         <footer class="wrapper">
             <h3></h3>

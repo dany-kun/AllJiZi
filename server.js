@@ -27,13 +27,12 @@ mylanguages.init(function(err, mlanguages) {
     }
 
     /* Setting the server with Express module  */
-
     //appExpress.use(bodyParser());
     appExpress.use(express.static(path.resolve(__dirname, 'static')));
 
     appExpress.use(cookieParser('myS3CRE7'));
     appExpress.use(session());
-
+    
 
     /** 
      * Setting the io socket connection

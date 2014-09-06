@@ -6,8 +6,12 @@
     app.config(['$routeProvider', '$locationProvider',
         function($routeProvider, $locationProvider) {
             $routeProvider
+            
+            .when('/',{
+                templateUrl:'modulechar.html'
+            })
 
-                .when('/Sources', {
+                .when('/sources', {
                     templateUrl: 'sources.html'
                 });
     
@@ -53,17 +57,11 @@
                 }
             };
             
-/*            if($cookieStore.get('pastCouples')) {
-                var logs = $cookieStore.get('pastCouples').log;
-                if (logs.length > 0) {
-                    Query.queryOneChar({
-                        //Need to withdraw 1 to get the last element [indexed on 0]
-                        lang: logs[logs.length - 1].lang,
-                        id: logs[logs.length - 1].id
-                    });
-                }
-            }*/
-
+            /* Main variable holding the character appearing on screen
+             * currentChar: all the information about the character
+             * currentLanguage: currently active language
+             * currentindex: index of the currently active language
+             */
             var charactersData = {
                 currentChar: {
                     tw: lang.tw.init,
@@ -109,27 +107,31 @@
 
                 var params = {};
                 params.lang = charactersData.currentLanguage;
-                params.id = charactersData.currentChar[params.lang]._id;
-
-                //$cookieStore.remove('pastCouples');
-                var tempPast = $cookieStore.get('pastCouples');
-
-                //If no defined cookies, initialize storing array
-                if (!tempPast) {
-                    tempPast = {};
+                
+                if (charactersData.currentChar[params.lang]) {
+                
+                    params.id = charactersData.currentChar[params.lang]._id;
+                
+                    //$cookieStore.remove('pastCouples');
+                    var tempPast = $cookieStore.get('pastCouples');
+                
+                    //If no defined cookies, initialize storing array
+                    if (!tempPast) {
+                        tempPast = {};
+                    }
+                    if (!(tempPast.log)) {
+                        tempPast.log = [];
+                    }
+                    //Set a limit to 20 characters
+                    if (tempPast.log.length > 20) {
+                        tempPast.log.shift();
+                    }
+                    var tempsLogs = tempPast.log;
+                    tempsLogs.push(params);
+                    $cookieStore.put('pastCouples', {
+                        log: tempsLogs
+                    });
                 }
-                if (!(tempPast.log)) {
-                    tempPast.log = [];
-                }
-                //Set a limit to 20 characters
-                if (tempPast.log.length > 20) {
-                    tempPast.log.shift();
-                }
-                var tempsLogs = tempPast.log;
-                tempsLogs.push(params);
-                $cookieStore.put('pastCouples', {
-                    log: tempsLogs
-                });
 
             }
 
@@ -145,6 +147,7 @@
                 setCurrentLanguage: function(country) {
                     setCurrentLanguage(country);
                     updateChar();
+                    recordLog();
                 },
                 lang: lang
 
@@ -152,8 +155,8 @@
         }
     ]);
 
-    app.controller('infoCtrl', ['$scope', 'MainChar', '$cookieStore',
-        function($scope, MainChar, $cookieStore) {
+    app.controller('infoCtrl', ['$scope', 'MainChar',
+        function($scope, MainChar) {
 
             $scope.isHidden = false;
 
@@ -167,7 +170,6 @@
 
             $scope.toggleInfo = function() {
                 $scope.isHidden = !$scope.isHidden;
-                console.log($cookieStore.get('pastChars'));
             };
 
 
@@ -240,6 +242,8 @@
                     default:
                         mlang = 'tw';
                 }
+                
+                //TODO try to move that part/ impact also the cookie fetch language problem
 
                 MainChar.setCurrentLanguage(mlang);
 
@@ -307,6 +311,10 @@
                 Query.queryOneChar(queryParams);
             };
             
+            /*function fetchCookieStore(params){
+                
+            }*/
+            
             //Ask for the previous char, taking its coordinates from cookies
             //->Would not work offline, store qll infos in cookies?
             $scope.prevData = function() {
@@ -330,6 +338,21 @@
                 }
 
             };
+            
+            var init = function() {
+                if ($cookieStore.get('pastCouples')) {
+                    var logs = $cookieStore.get('pastCouples').log;
+                    if (logs.length > 0) {
+                        Query.queryOneChar({
+                            lang: logs[logs.length - 1].lang,
+                            id: logs[logs.length - 1].id
+                        });
+                    }
+            
+                }
+            };
+            
+            init();
 
         }
     ]);
