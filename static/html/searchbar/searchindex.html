@@ -1,0 +1,22 @@
+<form ng-submit="submitted(searchedchar)">
+    <input class="searchwidth" type="text" ng-model="searchedchar" ng-change="" ng-keyup="getInput(searchedchar)" placeholder="Enter characters" />
+    <input type="submit" value="Search" class="basicbutton" />
+</form>
+
+<select class="searchwidth" ng-model="selectedChar" ng-change=onSelected() ng-options="result.CHAR group by result.LANGTABLE for result in foundcharsobj.list"></select>
+<div ng-hide="foundcharsobj.returned">Grasping data...</div>
+
+<!-- <div ng-repeat="typedchar in inputObj.split track by $index"> <a href="#">{{typedchar}}</a> </div> -->
+
+<!-- Use Angular UI API: not working yet with socket, need to check it later 
+                            <input type="text" ng-model="searchedchar" placeholder="Locations loaded via $http" 
+                            typeahead="fullchar.CHAR for fullchar in searchresult" typeahead-wait-ms="2000">
+                            <i ng-show="loadingLocations" class="glyphicon glyphicon-refresh"></i>-->
+
+<!--<input type='text' ng-model="searchedchar" ng-keyup='getInput(searchedchar)' 
+                                ng-options="fullchar.CHAR for fullchar in searchresult" 
+                                data-animation="am-flip-x" placeholder='Enter characters'>
+                               <select ng-model="searchresult" ng-options="fullchar.CHAR group by fullchar.LANGTABLE for fullchar in searchresult">
+                                      <option value="">-- choose color --</option>
+                                    </select>
+                                -->

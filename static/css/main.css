@@ -141,6 +141,7 @@ nav a:hover {
     padding: 0px 5% 10px;
     margin:10px 0px 0px 0px;
     border-radius:10px;
+    text-align:left;
 }
 
 .footer-container footer {
@@ -170,6 +171,11 @@ nav a:hover {
     
 }
 
+.flagboard{
+    text-align:center;
+    margin-bottom:20px;
+}
+
 .selectedFlag {
     border:3px solid ;
 }
@@ -190,11 +196,14 @@ input[type="submit"]:hover{
     background-color: #ddd;
 }
 
+.nextprevbuttons{
+    font-size:10%;
+}
+
 .nextbutton {
     border-bottom-right-radius: 5px;
     border-top-right-radius: 5px;
     float:right;
-    font-size:100%;
 }
 
 .prevbutton {
@@ -208,12 +217,24 @@ input.basicbutton {
     border-radius:5px 5px 5px 5px;
 }
 
+.searchwidth{
+    width:150px;
+}
 
+#character {
+    font-size: 200px;
+    text-align: -webkit-center;
+    text-align: center;
+}
 
+aside{
+    text-align:center;
+}
 
-
-
-
+/* Clearing the top float properties */
+.newchar{
+    clear:both;
+}
 
 
 
@@ -223,6 +244,8 @@ input.basicbutton {
 /* ==========================================================================
    Media Queries
    ========================================================================== */
+   
+
 
 @media only screen and (min-width: 480px) {
 
@@ -245,6 +268,9 @@ input.basicbutton {
     nav li:last-child a {
         margin-right: 0;
     }
+    
+
+    
 
 /* ========================
     INTERMEDIATE: IE Fixes
@@ -256,6 +282,15 @@ input.basicbutton {
 
     .oldie nav a {
         margin: 0 0.7%;
+    }
+}
+
+@media only screen and (min-width: 550px) {
+    .searchbar {
+        float: right;
+    }
+    .flagboard {
+        float: left;
     }
 }
 
@@ -290,17 +325,22 @@ input.basicbutton {
    ============ */
 
     .main article {
-        float: left;
+        float:left;
         width: 57%;
     }
     
-    .nextbutton{
-        float:right;
+    .main aside{
+        float: right;
+        width: 28%;
     }
-
+    
     .main aside {
         float: right;
         width: 28%;
+    }
+    
+    #hideinfobtn{
+        margin:0 auto;
     }
     
 

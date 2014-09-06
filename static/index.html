@@ -27,7 +27,7 @@
             <nav>
                 <ul>
                     <li>
-                        <a href="index.html">Home</a>
+                        <a href="">Home</a>
                     </li>
                     <li>
                         <a href="Sources">Sources</a>
@@ -48,63 +48,36 @@
     </div>
     <div class="main-container">
         <div class="main wrapper clearfix" ng-app="moduleChar">
-            <div class="flagboard" ng-controller="flagboardCtrl">
-                
-                <flag-board onflagclick='switchLanguage(param)' active='{{isSelected.currentIndex}}'></flag-board>
-                
+            <div class="top">
+                <div class="flagboard" ng-controller="flagboardCtrl">
+            
+                    <flag-board onflagclick='switchLanguage(param)' active='{{isSelected.currentIndex}}'></flag-board>
+            
+                </div>
+                <div class="searchbar ir" ng-controller="searchBarCtrl">
+                    <div my-search-bar></div>
+                </div>
+            
             </div>
-            
-            <div my-search-bar></div>
-            
-            
-            <div class='searchbar' ng-controller="searchBarCtrl">
-                <form ng-submit="submitted(searchedchar)">
-                    <input type="text" ng-model="searchedchar" ng-change="" ng-keyup="getInput(searchedchar)" placeholder="Enter characters" />
-                    <input type="submit" value="Search" class="basicbutton" />
-                </form>
-            
-                <select ng-model="selectedChar" ng-change=onSelected() ng-options="result.CHAR group by result.LANGTABLE for result in foundcharsobj.list"></select>
-                <div ng-hide="foundcharsobj.returned">Grasping data...</div>
-            
-                <!-- <div ng-repeat="typedchar in inputObj.split track by $index"> <a href="#">{{typedchar}}</a> </div> -->
-            
-                <!-- Use Angular UI API: not working yet with socket, need to check it later 
-                            <input type="text" ng-model="searchedchar" placeholder="Locations loaded via $http" 
-                            typeahead="fullchar.CHAR for fullchar in searchresult" typeahead-wait-ms="2000">
-                            <i ng-show="loadingLocations" class="glyphicon glyphicon-refresh"></i>-->
-            
-                <!--<input type='text' ng-model="searchedchar" ng-keyup='getInput(searchedchar)' 
-                                ng-options="fullchar.CHAR for fullchar in searchresult" 
-                                data-animation="am-flip-x" placeholder='Enter characters'>
-                               <select ng-model="searchresult" ng-options="fullchar.CHAR group by fullchar.LANGTABLE for fullchar in searchresult">
-                                      <option value="">-- choose color --</option>
-                                    </select>
-                                -->
-            </div>
-            
             
             <div ng-view></div>
             
             <div class="newchar" ng-controller="charCtrl">
                 <!-- If no Javascript
-                <form action="/require_char" method="post">!-->
-                    <div class="nextprevbuttons">
-                
-                        <input type="submit" ng-click="getData()" value="Next→" class=" nextbutton" />
-                
-                        <input type="submit" ng-click="prevData()" value="←Prev" class=" prevbutton" />
-                
-                    </div>
+                                                                <form action="/require_char" method="post">!-->
+            
                 <article id="character">
                     <p>
                         <span ng-bind="charactersData.char"></span>
                     </p>
+                    <input class="nextprevbuttons prevbutton" type="submit" ng-click="prevData()" value="←Prev" />
+                    <input class="nextprevbuttons nextbutton" type="submit" ng-click="getData()" value="Next→" />
                 </article>
-                
+            
+                <br>
+                <my-char-info ng-controller="infoCtrl" active-country="getActiveCountry()" />
+            
             </div>
-            
-            
-            <my-char-info ng-controller="infoCtrl" active-country="getActiveCountry()"/>
             
         </div>
         <!-- #main -->
