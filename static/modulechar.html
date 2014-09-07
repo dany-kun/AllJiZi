@@ -1,0 +1,34 @@
+
+    <div class="top clearfix">
+        <div class="flagboard" ng-controller="flagboardCtrl">
+
+            <flag-board onflagclick='switchLanguage(param)' active='{{isSelected.currentIndex}}'></flag-board>
+
+        </div>
+        <div class="searchbar ir" ng-controller="searchBarCtrl">
+            <div my-search-bar></div>
+        </div>
+
+    </div>
+
+    <div class="newchar clearfix" ng-controller="charCtrl">
+        <!-- If no Javascript
+                 <form action="/require_char" method="post">!-->
+
+        <article id="character">
+            
+            
+                <span ng-bind="charactersData.char"></span>
+            <div class="buttonbar">
+            <input class="nextprevbuttons prevbutton" type="submit" ng-click="prevData()" value="←Prev" />
+
+            <input class="nextprevbuttons nextbutton" type="submit" ng-click="getData()" value="Next→" />
+            </div>
+        </article>
+
+        <br>
+        <my-char-info ng-controller="infoCtrl" active-country="getActiveCountry()" />
+
+    </div>
+
+</div>

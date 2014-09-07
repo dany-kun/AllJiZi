@@ -75,7 +75,7 @@ body {
 }
 
 /* ===================
-    ALL: Orange Theme
+    ALL: Blue Theme
    =================== */
 
 .header-container {
@@ -207,6 +207,7 @@ input[type="submit"]:hover{
 
 .nextprevbuttons{
     font-size:10%;
+    vertical-align:top;
 }
 
 .nextbutton {
@@ -372,6 +373,11 @@ aside{
         min-height: 100%;
         margin-bottom: -70px; /* include footer top border of 20px : 50px + 20px*/
     }
+    
+    .newchar{
+        margin-top:5%;
+    }
+
 }
 
 /* ==========================================================================

@@ -339,10 +339,12 @@
 
             };
             
+            //Init retrieving the ast character at previous session to display it
             var init = function() {
                 if ($cookieStore.get('pastCouples')) {
                     var logs = $cookieStore.get('pastCouples').log;
                     if (logs.length > 0) {
+                        MainChar.setCurrentLanguage(logs[logs.length - 1].lang);
                         Query.queryOneChar({
                             lang: logs[logs.length - 1].lang,
                             id: logs[logs.length - 1].id
@@ -353,6 +355,7 @@
             };
             
             init();
+            
 
         }
     ]);
